@@ -1,0 +1,20 @@
+# If we want to create a python env from an existing env, it did not work
+# conda create -n tf1.13-p3.6-hvd-openmpi --clone tf1.13_hvd # this had issues
+# But, the following works:
+ conda create -n tf1.13-p3.6-hvd-openmpi --clone root
+
+#list all envs
+conda env list
+
+#activate any env from the list
+source activate tf1.12_py3.6
+
+#Create conda env offline
+ conda create -n tf1.13-p3.6-hvd-openmpi --clone root
+#
+## To activate this environment, use:
+## > source activate tf1.13-p3.6-hvd-openmpi
+##
+## To deactivate this environment, use:
+## > source deactivate tf1.13-p3.6-hvd-openmpi
+#

@@ -1,0 +1,2 @@
+python -c "import tensorflow as tf; print(tf.GIT_VERSION, tf.VERSION)" 
+pip show tensorflow #showing version
