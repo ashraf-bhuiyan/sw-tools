@@ -1,0 +1,41 @@
+#Rename sessionName
+Cntrl+a :sessionname mySessionName
+
+#get out of screen without killing it
+ctrl+A and then ctrl+D
+
+#inside a screen, if you wan tot know the screen id: 
+ echo $STY
+
+#after creating the screens, when done with work detach the screen
+ctrl+a then d
+#killing screen
+screen -S 133749  -p 0 -X quit
+#listing screen previously created
+screen -ls
+#starting detached screen
+screen -r '1234.somescreensession'
+#starting an attached screen
+screen -D -r '1234.somescreensession'             
+
+#terminate all the screens in a session:
+#when you are in a session:
+ctral+a then :quit
+
+# Rename screen name so that you can identify which screen is for which
+So you have to do so: Ctrl-a:sessionname [new_name]
+
+#Screen splitting
+To split vertically: ctrl+a then |
+To split horizontally: ctrl+a then S (uppercase 's')
+To unsplit: ctrl+a then Q (uppercase 'q')
+To switch from one to the other: ctrl+a then tab
+Note: After splitting, you need to go into the new region and start a new session via ctrl+a then c before you can use that area
+
+#Screen EDIT, basic screen usage:
+New terminal: ctrl+a then c
+Next terminal: ctrl+a then space
+Previous terminal: ctrl+a then backspace
+N'th terminal ctrl+a then [n]. (works for n = {0,1 .. 9})
+Switch between terminals using list: ctrl+a then " (useful when more than 10 terminals)
+Send ctrl+a to the underlying terminal ctrl+a then a

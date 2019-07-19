@@ -1,0 +1,174 @@
+#Reverting a git commit from master or any branch:i (if you a think a commit causing some problem, you can revert the commit and see that new issue is fixed or not)
+ git revert a2ab8cee61370525679c3670fe17139eeacf918f
+#If you want to find who created a branch:
+ git for-each-ref --format='%(committerdate) %09 %(authorname) %09 %(refname)' | sort -k5n -k2M -k3n -k4n | grep branch_name
+#When you rebase with master
+ git rebase origin/master
+ #then you are in a detached head
+ #Create a branch from detached head
+ git branch new_branch
+ git checkout new_branch
+# git adding whole directory or folder
+ git add foldername\/\*
+ #then usually do git commit and git push
+
+# Need not to provide username and password for one hour. you can increase the time.
+  git config --global credential.helper 'cache --timeout=36000'
+
+# To remove all untracked files (added but, now not needed) from git
+ #To see how many untracked files will be deleted: 
+ git clean -n
+ #to actually delete the files 
+ git clean -f -d
+
+#After merging with a branch, there may be some CONFLICT in some files
+#to see the conflicted file again
+ git diff --name-only --diff-filter=U
+
+#To see only filenames difference between two branches
+ git diff --name-status firstbranch..secondbranch
+ #or to see only filename difference between your branch and master
+ git diff --name-status master
+
+#To see what is committed, first do the git log, find the commit number you intereseted, then do go show
+git log
+git show "commit number" #will show all changes for that commit number
+
+# How to create a branch from my or sombody's PR
+# Say, 261 is the PR number, set_omp is my new branch name out of the PR 261
+git fetch origin pull/261/head:set_omp
+git checkout set_omp
+  #just downloading PRs
+  https://github.com/genome/docs/wiki/How-do-I-%60git-checkout%60-a-pull-request%3F
+
+#what is modified/tracked, untracked
+git status -uno #status with no untracked file
+
+#merging remote to local
+git fetch origin
+git rebase -p origin/dev #if rebasing local git at the remote git
+
+#make a new branch and checkout to that branch:
+git checkout -b branch_name
+
+#for a new local branch(ashraf/slice), if no remote branch exists, but you want to create a new remote branch(say ashraf/slice)
+# and track:
+#(in local ashraf/branch)
+git push --set-upstream origin ashraf/slice
+
+#local branch(nhasabni/mkldnn) make it tracking already existing remote branch(origin/nhasabni/mkldnn):
+git branch --set-upstream-to=origin/nhasabni/mkldnn
+or:
+git branch --set-upstream-to origin nhasabni/mkldnn
+
+#then you can pull and push and then local proeprely conrresponds to proper remote branch
+#
+#if very hard to merge and you want to discard the merge
+git reset --merge
+
+# if during merge (merging master to my branch, by : git merge master)
+# then conflict in a file, resolve the conflict, and then if you add, commit, 
+# git will say, cannot do partial commit, then just do (-i will do all the pending commit also):
+git commit -i -m " *** " file
+
+
+#deleting a local branch(ashraf/mkldnn_layout):
+git branch -D ashraf/mkldnn_layout
+#deleting a remote branch(ashraf/mkldnn_layout)
+git push origin --delete ashraf/mkldnn_layout
+
+#Rebasing the local branch(say RB) onto master
+#Meaning: all the new changes from master now applying to the local RB, so that local RB is now uptodated
+1. Make sure local master is updated
+ git checkout master
+ git pull origin master
+2. Then checkout your branch and rebase your changes on master :
+ git checkout RB
+ git rebase master # now RB got all updates  from updated master
+3. push your updated local RB to the remote RB
+ git push
+
+#See differences in a file from two branches
+ git diff mybranch master -- myfile.cs
+ 
+#see differences between  branch1 and master
+ git diff master...branch1 #see how branch2 is diverged from master
+
+# creating patch between current HEAD and the last commit:
+ git format-patch -1 HEAD
+ # if current HEAD and 2nd last commit
+ git format-patch HEAD~2...HEAD --stdout > changes.patch
+ # applying patch
+ git -am < changes.patch # git apply will not work for HEAD and 2dn commit 
+
+# creating patch between two branches (master and branch1):
+git diff $(git merge-base master branch1) > patch1
+
+#check if applying patch will be with no error, by actually not applying
+git apply --check padfusion1
+
+#apply the patch
+#copy the patch in the repo and have the correct branch checked
+git apply patch1
+
+#Create a fork of one repo (public magenta) to our private repor (inside nervana system)
+ git clone https://github.com/NervanaSystems/tensorflow-wavnet.git  #  clone the private repo name first.
+ cd tensorflow-wavnet
+ git remote add upstream https://github.com/tensorflow/magenta.git #magenta contains wavenet
+ git fetch upstream #fetch from the tensorflow magenta public repo
+ git pull upstream master --allow-unrelated-histories
+ git push origin master  # push the locally downloaded public repo to the remote private repo  
+ #Ramesh way to do the same 
+ git clone <repo address for internal repo>  
+ cd <your model repo folder>
+ git remote add  <remote repo you want add to our repo>
+ git fetch upstream
+ git checkout master
+ git rebase upstream/master
+ git push -f origin master
+
+#Show which remote branch the local branch is tracking
+ git remote show origin
+
+#remove or delete a local branch;
+ git branch -d the_local_branch
+ git branch -D the_local_branch
+#remove or delete a remote branch;
+ git push origin --delete the_remote_branch
+
+#Remove the existing remote tracking, so that local branch will track no remote branch.
+ git config --unset branch.<branch>.remote
+ git config --unset branch.<branch>.merge
+
+#if you want to delete/remove a file from a local branch and then from the remote branch
+  git rm file1.txt # remove from the git and the file system
+  git commit -m "remove file1.txt"
+  #But if you want to remove the file only from the Git repository and not remove it from the filesystem, use:
+  git rm --cached file1.txt
+  git commit -m "remove file1.txt"
+  #And to push changes to remote repo
+  git push origin branch_name  
+
+#if you want to delete/remove a folder from a local branch and then from the remote branch
+ git rm -r folder-name
+ git commit -m " ... "
+ git push
+
+#if you want to revert your changes and get back to you a any previous commit(such as e3f1e37)
+ git checkout branch
+ git reset --hard e3f1e37
+ git push --force origin branch
+
+#if you accidentally commit to your local master, and you want to get rid of them
+#and get back to the exact state of the origin/master
+ #on local master branch
+ git pull # sync the local master to the current origin/master
+ git reset --hard origin/master
+
+# importing only a file from another branch to this branch
+# Such as I am in branch1, and want to import the version of file in branch2 into my branch1.
+ git checkout branch1           
+ git checkout branch2 -- /path/to/app.js
+
+#if you want to know, what are the files, that intel employee contributed (say in Tensorflow)
+git log --no-merges --author=".*\@intel.com" --committer=".*\@intel.com"  --pretty=format:"" --name-only | sort -u | tail -n+2
