@@ -1,6 +1,6 @@
 
 import sys
-
+#the script just removed the space, but the comma is there in the input file
 infile = "train.txt"
 outfile = "train.csv"
 with open(infile, 'rb') as in_file:
