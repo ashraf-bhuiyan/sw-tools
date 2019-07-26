@@ -8,9 +8,15 @@
  #Create a branch from detached head
  git branch new_branch
  git checkout new_branch
+
 # git adding whole directory or folder
  git add foldername\/\*
  #then usually do git commit and git push
+
+# git adding all files in a dir
+ cd dir
+ git add .
+ git commit; git push
 
 # Need not to provide username and password for one hour. you can increase the time.
   git config --global credential.helper 'cache --timeout=36000'
